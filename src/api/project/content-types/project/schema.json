@@ -7,7 +7,7 @@
     "displayName": "Project"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {

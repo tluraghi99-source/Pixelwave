@@ -3,10 +3,22 @@
 // src/data/work.ts (PROJECTS) and src/data/team.ts (TEAM) so the two
 // content-types have real starter content instead of empty tables.
 //
-// Run with: node scripts/seed.ts
-// (Node 20+'s native TypeScript support strips the types; no ts-node/tsx
-// needed. Re-run only with awareness that it is NOT idempotent — it always
-// creates new rows, so running it twice duplicates all entries.)
+// Run with: node scripts/seed.ts (or: npm run seed)
+// (Node 22.18+/23.6+'s native TypeScript support strips the types; no
+// ts-node/tsx needed. Re-run only with awareness that it is NOT idempotent
+// — it always creates new rows, so running it twice duplicates all
+// entries.)
+//
+// Draft & Publish is enabled on both content-types, so `.create()` alone
+// would only create a draft — invisible to the public find/findOne API,
+// which defaults to returning published entries only. Passing
+// `status: 'published'` to `.create()` makes the document service create
+// the draft and then immediately publish it in the same call (confirmed
+// against the installed 5.52.2 source,
+// node_modules/@strapi/core/dist/services/document-service/repository.mjs:
+// `create()` always writes a draft first, then — only when
+// `hasDraftAndPublish && params.status === 'published'` — calls the
+// internal `publish()` on the new document before returning it).
 //
 // Programmatic-boot API note: the task's draft plan guessed
 // `import strapi from '@strapi/strapi'` with
@@ -192,11 +204,11 @@ async function run() {
   const app = await createStrapi(appContext).load();
 
   for (const project of PROJECTS) {
-    await app.documents('api::project.project').create({ data: project });
+    await app.documents('api::project.project').create({ data: project, status: 'published' });
   }
 
   for (const member of TEAM_MEMBERS) {
-    await app.documents('api::team-member.team-member').create({ data: member });
+    await app.documents('api::team-member.team-member').create({ data: member, status: 'published' });
   }
 
   console.log(`Seeded ${PROJECTS.length} projects and ${TEAM_MEMBERS.length} team members.`);

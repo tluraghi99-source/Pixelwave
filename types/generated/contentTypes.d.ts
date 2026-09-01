@@ -451,7 +451,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     singularName: 'project';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
     client: Schema.Attribute.String;
@@ -487,7 +487,7 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
     singularName: 'team-member';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
