@@ -33,6 +33,19 @@ their "Deploy an existing project" flow, pointing it at the GitHub repo
 from step 2. Strapi Cloud will provision hosting and a production
 database for you — this replaces the local SQLite database used so far.
 
+**Important — production starts with an empty database.** The 24 seeded
+entries you verified in step 1 live only in this machine's local
+`.tmp/data.db`, which is gitignored and never pushed to GitHub — Strapi
+Cloud provisions a brand-new, empty database for the deployed instance.
+Left alone, the live CMS will show 0 projects and 0 team members. To get
+the same content into production, either (a) re-run `npm run seed`
+pointed at the production database, using the `DATABASE_CLIENT`/
+`DATABASE_*` connection env vars Strapi Cloud shows you for the deployed
+instance, or (b) use Strapi's built-in `npx strapi transfer` command to
+copy content from your local instance to the remote one — it needs a
+transfer token generated from the Strapi Cloud admin panel first; see
+`npx strapi transfer --help` and Strapi's current docs for exact usage.
+
 ## 4. Note the production API URL
 
 Once deployed, Strapi Cloud gives you a production URL (something like
