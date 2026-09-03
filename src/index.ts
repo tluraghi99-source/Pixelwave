@@ -32,6 +32,8 @@ export default {
       'api::project.project.findOne',
       'api::team-member.team-member.find',
       'api::team-member.team-member.findOne',
+      'api::client-logo.client-logo.find',
+      'api::client-logo.client-logo.findOne',
     ];
 
     for (const action of actionsToEnable) {
