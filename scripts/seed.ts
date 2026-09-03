@@ -45,6 +45,8 @@
 // ERR_UNSUPPORTED_DIR_IMPORT on a transitive `lodash/fp` deep import
 // inside @strapi/core that only resolves under CommonJS/webpack rules.
 const { compileStrapi, createStrapi } = require('@strapi/strapi');
+const fs = require('fs');
+const path = require('path');
 
 // Transcribed from 000_sito/src/data/work.ts — PROJECTS array (10 entries,
 // re-checked against the live file on 2026-09-01; unchanged from the plan's
@@ -199,6 +201,65 @@ const TEAM_MEMBERS = [
   { name: 'Tomás Silveira', role: 'Studio Manager', order: 14 },
 ];
 
+// Transcribed from 000_sito/src/data/clients.ts — CLIENTS array (27
+// entries, re-checked against the live file on 2026-09-03). `order` is the
+// entry's 1-based position in the source array. `logoFile` names the file
+// under scripts/seed-assets/clients/ to upload for this entry, or null for
+// the clients that render as a text logotype (no real logo asset exists).
+const CLIENT_LOGOS = [
+  { name: 'Inter', order: 1, logoFile: 'inter.svg' },
+  { name: 'Adidas', order: 2, logoFile: 'adidas.svg' },
+  { name: 'Red Bull', order: 3, logoFile: 'redbull.svg' },
+  { name: 'Style Magazine', order: 4, logoFile: null },
+  { name: '1000 Miglia', order: 5, logoFile: '1000miglia.svg' },
+  { name: 'Gattinoni Group', order: 6, logoFile: null },
+  { name: 'Ford', order: 7, logoFile: 'ford.svg' },
+  { name: 'ABmedica', order: 8, logoFile: null },
+  { name: 'Snakes Milano', order: 9, logoFile: null },
+  { name: 'Quattroruote', order: 10, logoFile: 'quattroruote.svg' },
+  { name: "L'Isola del Gusto", order: 11, logoFile: null },
+  { name: "Men's Health", order: 12, logoFile: 'menshealth.svg' },
+  { name: 'Deejay', order: 13, logoFile: 'deejay.svg' },
+  { name: 'STS Communication', order: 14, logoFile: null },
+  { name: 'Milano Cortina 2026', order: 15, logoFile: 'milanocortina2026.svg' },
+  { name: 'Campari', order: 16, logoFile: 'campari.svg' },
+  { name: 'Marelli', order: 17, logoFile: 'marelli.svg' },
+  { name: 'Nike', order: 18, logoFile: 'nike.svg' },
+  { name: 'BNP Paribas', order: 19, logoFile: 'bnpparibas.svg' },
+  { name: 'Alfa Romeo', order: 20, logoFile: null },
+  { name: 'Maserati', order: 21, logoFile: 'maserati.svg' },
+  { name: 'Satispay', order: 22, logoFile: 'satispay.svg' },
+  { name: 'Coca-Cola', order: 23, logoFile: 'cocacola.svg' },
+  { name: 'UniCredit Bank', order: 24, logoFile: 'unicredit.svg' },
+  { name: 'Generali', order: 25, logoFile: 'generali.svg' },
+  { name: 'immobiliare.it', order: 26, logoFile: null },
+  { name: 'Allianz', order: 27, logoFile: 'allianz.svg' },
+];
+
+// Uploads one local SVG file through Strapi's upload plugin service and
+// returns the created file record's numeric id, ready to assign directly
+// to a `media` attribute (Strapi v5's document service accepts either a
+// raw file object with `.id` or the bare id for a single-media field —
+// confirmed against the installed 5.52.2 source,
+// node_modules/@strapi/core/dist/services/document-service/internationalization.mjs's
+// normalizeMediaIds: `value && typeof value === 'object' && 'id' in value
+// ? value.id : value`).
+async function uploadClientLogo(app: any, filename: string) {
+  const filePath = path.join(__dirname, 'seed-assets', 'clients', filename);
+  const { size } = fs.statSync(filePath);
+  const uploadService = app.plugin('upload').service('upload');
+  const [uploaded] = await uploadService.upload({
+    data: {},
+    files: {
+      filepath: filePath,
+      originalFilename: filename,
+      mimetype: 'image/svg+xml',
+      size,
+    },
+  });
+  return uploaded.id;
+}
+
 async function run() {
   const appContext = await compileStrapi();
   const app = await createStrapi(appContext).load();
@@ -211,7 +272,17 @@ async function run() {
     await app.documents('api::team-member.team-member').create({ data: member, status: 'published' });
   }
 
-  console.log(`Seeded ${PROJECTS.length} projects and ${TEAM_MEMBERS.length} team members.`);
+  for (const client of CLIENT_LOGOS) {
+    const logoId = client.logoFile ? await uploadClientLogo(app, client.logoFile) : undefined;
+    await app.documents('api::client-logo.client-logo').create({
+      data: { name: client.name, order: client.order, ...(logoId ? { logo: logoId } : {}) },
+      status: 'published',
+    });
+  }
+
+  console.log(
+    `Seeded ${PROJECTS.length} projects, ${TEAM_MEMBERS.length} team members, and ${CLIENT_LOGOS.length} client logos.`
+  );
   await app.destroy();
   process.exit(0);
 }
