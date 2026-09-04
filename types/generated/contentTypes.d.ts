@@ -486,12 +486,16 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   attributes: {
     bodyDescription: Schema.Attribute.Text;
     client: Schema.Attribute.String;
+    cover: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
     galleryImages: Schema.Attribute.Media<'images', true>;
     heroMedia: Schema.Attribute.Media<'images' | 'videos'>;
+    heroMediaType: Schema.Attribute.Enumeration<['image', 'video', 'youtube']> &
+      Schema.Attribute.DefaultTo<'image'>;
+    heroMediaYoutubeUrl: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

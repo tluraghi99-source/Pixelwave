@@ -45,6 +45,19 @@
       "multiple": false,
       "allowedTypes": ["images", "videos"]
     },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroMediaType": {
+      "type": "enumeration",
+      "enum": ["image", "video", "youtube"],
+      "default": "image"
+    },
+    "heroMediaYoutubeUrl": {
+      "type": "string"
+    },
     "galleryImages": {
       "type": "media",
       "multiple": true,
