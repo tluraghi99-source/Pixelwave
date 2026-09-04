@@ -23,6 +23,9 @@
     "description": {
       "type": "text"
     },
+    "bodyDescription": {
+      "type": "text"
+    },
     "client": {
       "type": "string"
     },
