@@ -256,6 +256,20 @@ const CLIENT_LOGOS = [
   { name: 'Allianz', order: 27, logoFile: 'allianz.svg' },
 ];
 
+// The /work page's fixed Category-filter taxonomy — same six categories as
+// 000_sito's src/data/services.ts (Video, Photo, Branding, Web Design,
+// Social, Events), in that same order. No draftAndPublish on this
+// content-type (see its schema.json), so entries are simply "on" once
+// created — no separate publish step.
+const WORK_CATEGORIES = [
+  { name: 'Video', order: 1 },
+  { name: 'Photo', order: 2 },
+  { name: 'Branding', order: 3 },
+  { name: 'Web Design', order: 4 },
+  { name: 'Social', order: 5 },
+  { name: 'Events', order: 6 },
+];
+
 // Uploads one local SVG file through Strapi's upload plugin service and
 // returns the created file record's numeric id, ready to assign directly
 // to a `media` attribute (Strapi v5's document service accepts either a
@@ -300,8 +314,12 @@ async function run() {
     });
   }
 
+  for (const category of WORK_CATEGORIES) {
+    await app.documents('api::work-category.work-category').create({ data: category });
+  }
+
   console.log(
-    `Seeded ${PROJECTS.length} projects, ${TEAM_MEMBERS.length} team members, and ${CLIENT_LOGOS.length} client logos.`
+    `Seeded ${PROJECTS.length} projects, ${TEAM_MEMBERS.length} team members, ${CLIENT_LOGOS.length} client logos, and ${WORK_CATEGORIES.length} work categories.`
   );
   await app.destroy();
   process.exit(0);

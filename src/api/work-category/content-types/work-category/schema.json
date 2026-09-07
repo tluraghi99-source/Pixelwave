@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "work_categories",
+  "info": {
+    "singularName": "work-category",
+    "pluralName": "work-categories",
+    "displayName": "Work Category"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "order": {
+      "type": "integer"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "mappedBy": "workCategories"
+    }
+  }
+}

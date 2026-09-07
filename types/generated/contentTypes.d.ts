@@ -510,6 +510,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    workCategories: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::work-category.work-category'
+    >;
     year: Schema.Attribute.Integer;
   };
 }
@@ -540,6 +544,39 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
     photoHover: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiWorkCategoryWorkCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'work_categories';
+  info: {
+    displayName: 'Work Category';
+    pluralName: 'work-categories';
+    singularName: 'work-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::work-category.work-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    order: Schema.Attribute.Integer;
+    projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1060,6 +1097,7 @@ declare module '@strapi/strapi' {
       'api::client-logo.client-logo': ApiClientLogoClientLogo;
       'api::project.project': ApiProjectProject;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
+      'api::work-category.work-category': ApiWorkCategoryWorkCategory;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

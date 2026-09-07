@@ -17,8 +17,8 @@ export default {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }: { strapi: any }) {
-    // Grant the Public role read-only (find/findOne) access to the
-    // Project and Team Member content-types, so their REST endpoints
+    // Grant the Public role read-only (find/findOne) access to every
+    // content-type the frontend fetches directly, so their REST endpoints
     // are reachable without authentication. Idempotent: only creates
     // a permission row if one doesn't already exist for that action.
     const publicRole = await strapi
@@ -34,6 +34,8 @@ export default {
       'api::team-member.team-member.findOne',
       'api::client-logo.client-logo.find',
       'api::client-logo.client-logo.findOne',
+      'api::work-category.work-category.find',
+      'api::work-category.work-category.findOne',
     ];
 
     for (const action of actionsToEnable) {
