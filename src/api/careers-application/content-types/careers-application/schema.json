@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "careers_applications",
+  "info": {
+    "singularName": "careers-application",
+    "pluralName": "careers-applications",
+    "displayName": "Careers Application",
+    "description": "Job applications from the /careers form. Public can create; nothing here is publicly readable."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "surname": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    },
+    "cv": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["files"],
+      "required": true
+    }
+  }
+}

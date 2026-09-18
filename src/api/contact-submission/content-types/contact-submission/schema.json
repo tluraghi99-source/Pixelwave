@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_submissions",
+  "info": {
+    "singularName": "contact-submission",
+    "pluralName": "contact-submissions",
+    "displayName": "Contact Submission",
+    "description": "Project inquiries from the /contact form. Public can create; nothing here is publicly readable."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "projectTypes": {
+      "type": "json"
+    },
+    "timeline": {
+      "type": "string"
+    }
+  }
+}

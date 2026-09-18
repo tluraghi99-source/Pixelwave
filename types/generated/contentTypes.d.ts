@@ -443,6 +443,41 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCareersApplicationCareersApplication
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'careers_applications';
+  info: {
+    description: 'Job applications from the /careers form. Public can create; nothing here is publicly readable.';
+    displayName: 'Careers Application';
+    pluralName: 'careers-applications';
+    singularName: 'careers-application';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    cv: Schema.Attribute.Media<'files'> & Schema.Attribute.Required;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::careers-application.careers-application'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    role: Schema.Attribute.String & Schema.Attribute.Required;
+    surname: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiClientLogoClientLogo extends Struct.CollectionTypeSchema {
   collectionName: 'client_logos';
   info: {
@@ -467,6 +502,39 @@ export interface ApiClientLogoClientLogo extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required;
     order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiContactSubmissionContactSubmission
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'contact_submissions';
+  info: {
+    description: 'Project inquiries from the /contact form. Public can create; nothing here is publicly readable.';
+    displayName: 'Contact Submission';
+    pluralName: 'contact-submissions';
+    singularName: 'contact-submission';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-submission.contact-submission'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    projectTypes: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    timeline: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1094,7 +1162,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::careers-application.careers-application': ApiCareersApplicationCareersApplication;
       'api::client-logo.client-logo': ApiClientLogoClientLogo;
+      'api::contact-submission.contact-submission': ApiContactSubmissionContactSubmission;
       'api::project.project': ApiProjectProject;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'api::work-category.work-category': ApiWorkCategoryWorkCategory;
