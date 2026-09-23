@@ -32,9 +32,6 @@
     "year": {
       "type": "integer"
     },
-    "order": {
-      "type": "integer"
-    },
     "tags": {
       "type": "component",
       "repeatable": true,

@@ -570,7 +570,6 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       'api::project.project'
     > &
       Schema.Attribute.Private;
-    order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     tags: Schema.Attribute.Component<'project.tag', true>;
