@@ -3,6 +3,9 @@ import type { Core } from '@strapi/strapi';
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
+  // Public address of this CMS (e.g. https://cms.pixelwave.it) — set in
+  // production only; left unset locally.
+  url: env('PUBLIC_URL'),
   app: {
     keys: env.array('APP_KEYS')!,
   },
