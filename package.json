@@ -22,6 +22,7 @@
     "@strapi/provider-email-nodemailer": "5.52.2",
     "@strapi/strapi": "5.52.2",
     "better-sqlite3": "12.8.0",
+    "mysql2": "^3.24.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.30.3",
