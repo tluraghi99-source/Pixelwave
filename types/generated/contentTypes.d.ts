@@ -459,7 +459,7 @@ export interface ApiCareersApplicationCareersApplication
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    cv: Schema.Attribute.Media<'files'> & Schema.Attribute.Required;
+    cv: Schema.Attribute.Media<'files'>;
     email: Schema.Attribute.Email & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<

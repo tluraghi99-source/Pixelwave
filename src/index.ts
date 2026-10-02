@@ -168,7 +168,7 @@ export default {
           `Email: ${result.email}`,
           `Phone: ${result.phone}`,
           `Role: ${result.role}`,
-          attachments.length > 0 ? 'CV: attached' : 'CV: could not be attached — check the admin panel.',
+          attachments.length > 0 ? 'CV: attached (not kept on the server)' : 'CV: could not be attached — check the admin panel.',
         ].join('\n'),
         html: renderEmailHtml(
           'New job application',
@@ -177,12 +177,25 @@ export default {
             ['Email', mailtoLink(result.email)],
             ['Phone', `<a href="tel:${escapeHtml(result.phone)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(result.phone)}</a>`],
             ['Role', escapeHtml(result.role)],
-            ['CV', attachments.length > 0 ? 'Attached to this email' : 'Could not be attached — check the admin panel'],
+            ['CV', attachments.length > 0 ? 'Attached to this email (not kept on the server)' : 'Could not be attached — check the admin panel'],
           ],
           'Reply to this email to answer directly.'
         ),
         attachments,
       });
+
+      // The CV only needs to live in the mailbox: once the email carrying it
+      // has actually been sent, remove the uploaded copy (file + Media
+      // Library entry) so personal data isn't kept on the server. Reached
+      // only if send() above didn't throw — on a failed send the CV stays,
+      // so the application can still be recovered from the admin panel.
+      if (attachments.length > 0 && full?.cv) {
+        try {
+          await strapi.plugin('upload').service('upload').remove(full.cv);
+        } catch (err) {
+          strapi.log.error(`Sent the CV by email but could not delete the uploaded copy (file id ${full.cv.id}):`, err);
+        }
+      }
     }
 
     strapi.db.lifecycles.subscribe({
