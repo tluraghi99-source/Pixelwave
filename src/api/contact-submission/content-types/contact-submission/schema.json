@@ -20,6 +20,9 @@
       "type": "email",
       "required": true
     },
+    "phone": {
+      "type": "string"
+    },
     "projectTypes": {
       "type": "json"
     },

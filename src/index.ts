@@ -118,6 +118,7 @@ export default {
         text: [
           `Name: ${result.name}`,
           `Email: ${result.email}`,
+          `Phone: ${result.phone || '—'}`,
           `Project type: ${projectTypes}`,
           `Timeline: ${result.timeline || '—'}`,
         ].join('\n'),
@@ -126,6 +127,12 @@ export default {
           [
             ['Name', escapeHtml(result.name)],
             ['Email', mailtoLink(result.email)],
+            [
+              'Phone',
+              result.phone
+                ? `<a href="tel:${escapeHtml(result.phone)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(result.phone)}</a>`
+                : '—',
+            ],
             ['Project type', escapeHtml(projectTypes)],
             ['Timeline', escapeHtml(result.timeline || '—')],
           ],

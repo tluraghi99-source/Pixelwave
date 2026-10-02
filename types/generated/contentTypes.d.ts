@@ -532,6 +532,7 @@ export interface ApiContactSubmissionContactSubmission
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String;
     projectTypes: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     timeline: Schema.Attribute.String;
