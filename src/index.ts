@@ -64,7 +64,53 @@ export default {
     const CONTACT_UID = 'api::contact-submission.contact-submission';
     const CAREERS_UID = 'api::careers-application.careers-application';
 
+    const escapeHtml = (value: unknown) =>
+      String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+    // Inline-styled table layout — email clients ignore <style> blocks and
+    // modern CSS, so this is the one format that renders consistently.
+    // Row values are passed in already-escaped (or as trusted markup).
+    function renderEmailHtml(title: string, rows: Array<[string, string]>, note?: string) {
+      const rowsHtml = rows
+        .map(
+          ([label, value]) => `
+            <tr>
+              <td style="padding:14px 0;border-bottom:1px solid #e5e5e5;width:130px;vertical-align:top;font-family:Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#808080;">${escapeHtml(label)}</td>
+              <td style="padding:14px 0;border-bottom:1px solid #e5e5e5;vertical-align:top;font-family:Helvetica,Arial,sans-serif;font-size:15px;color:#000000;">${value}</td>
+            </tr>`
+        )
+        .join('');
+
+      return `<!doctype html>
+<html>
+  <body style="margin:0;padding:24px;background:#f5f5f5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;">
+      <tr>
+        <td style="background:#000000;padding:24px 32px;border-bottom:4px solid #FF5B00;">
+          <span style="font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#ffffff;">PixelWave</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:32px;">
+          <h1 style="margin:0 0 20px;font-family:Helvetica,Arial,sans-serif;font-size:22px;color:#000000;">${escapeHtml(title)}</h1>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rowsHtml}</table>
+          ${note ? `<p style="margin:24px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#666666;">${escapeHtml(note)}</p>` : ''}
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+    }
+
+    const mailtoLink = (email: string) =>
+      `<a href="mailto:${escapeHtml(email)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(email)}</a>`;
+
     async function sendContactEmail(mailTo: string, result: any) {
+      const projectTypes = (result.projectTypes || []).join(', ') || '—';
       await strapi.plugin('email').service('email').send({
         to: mailTo,
         replyTo: result.email,
@@ -72,9 +118,19 @@ export default {
         text: [
           `Name: ${result.name}`,
           `Email: ${result.email}`,
-          `Project type: ${(result.projectTypes || []).join(', ') || '—'}`,
+          `Project type: ${projectTypes}`,
           `Timeline: ${result.timeline || '—'}`,
         ].join('\n'),
+        html: renderEmailHtml(
+          'New project inquiry',
+          [
+            ['Name', escapeHtml(result.name)],
+            ['Email', mailtoLink(result.email)],
+            ['Project type', escapeHtml(projectTypes)],
+            ['Timeline', escapeHtml(result.timeline || '—')],
+          ],
+          'Reply to this email to answer directly.'
+        ),
       });
     }
 
@@ -107,6 +163,17 @@ export default {
           `Role: ${result.role}`,
           attachments.length > 0 ? 'CV: attached' : 'CV: could not be attached — check the admin panel.',
         ].join('\n'),
+        html: renderEmailHtml(
+          'New job application',
+          [
+            ['Name', escapeHtml(`${result.name} ${result.surname}`)],
+            ['Email', mailtoLink(result.email)],
+            ['Phone', `<a href="tel:${escapeHtml(result.phone)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(result.phone)}</a>`],
+            ['Role', escapeHtml(result.role)],
+            ['CV', attachments.length > 0 ? 'Attached to this email' : 'Could not be attached — check the admin panel'],
+          ],
+          'Reply to this email to answer directly.'
+        ),
         attachments,
       });
     }
