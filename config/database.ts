@@ -29,7 +29,9 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
           rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', true),
         },
       },
-      pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
+      // min 0: MySQL closes idle connections after wait_timeout (60 s on the production
+      // server), and a pool holding idle ones leaves the next requests hanging.
+      pool: { min: env.int('DATABASE_POOL_MIN', 0), max: env.int('DATABASE_POOL_MAX', 10) },
     },
     postgres: {
       client: 'postgres',
@@ -50,7 +52,9 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
         },
         schema: env('DATABASE_SCHEMA', 'public'),
       },
-      pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
+      // min 0: MySQL closes idle connections after wait_timeout (60 s on the production
+      // server), and a pool holding idle ones leaves the next requests hanging.
+      pool: { min: env.int('DATABASE_POOL_MIN', 0), max: env.int('DATABASE_POOL_MAX', 10) },
     },
     sqlite: {
       client: 'sqlite',
