@@ -12,6 +12,8 @@ const config: Core.Config.Middlewares = [
   // Open to any origin unless CORS_ORIGINS is set (comma-separated list) —
   // production should set it to the real site, e.g. https://pixelwave.it.
   { name: 'strapi::cors', config: corsOrigins.length > 0 ? { origin: corsOrigins } : {} },
+  // Temporary workaround for the Media Library listing 404 on the server's MySQL.
+  'global::media-library-folder-filter',
   'strapi::poweredBy',
   'strapi::query',
   'strapi::body',
