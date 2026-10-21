@@ -86,7 +86,7 @@ export default {
         .join('');
 
       return `<!doctype html>
-<html>
+<html lang="it">
   <body style="margin:0;padding:24px;background:#f5f5f5;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;">
       <tr>
@@ -114,29 +114,29 @@ export default {
       await strapi.plugin('email').service('email').send({
         to: mailTo,
         replyTo: result.email,
-        subject: `New project inquiry from ${result.name}`,
+        subject: `Nuova richiesta di progetto da ${result.name}`,
         text: [
-          `Name: ${result.name}`,
+          `Nome: ${result.name}`,
           `Email: ${result.email}`,
-          `Phone: ${result.phone || '—'}`,
-          `Project type: ${projectTypes}`,
-          `Timeline: ${result.timeline || '—'}`,
+          `Telefono: ${result.phone || '—'}`,
+          `Tipo di progetto: ${projectTypes}`,
+          `Tempi: ${result.timeline || '—'}`,
         ].join('\n'),
         html: renderEmailHtml(
-          'New project inquiry',
+          'Nuova richiesta di progetto',
           [
-            ['Name', escapeHtml(result.name)],
+            ['Nome', escapeHtml(result.name)],
             ['Email', mailtoLink(result.email)],
             [
-              'Phone',
+              'Telefono',
               result.phone
                 ? `<a href="tel:${escapeHtml(result.phone)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(result.phone)}</a>`
                 : '—',
             ],
-            ['Project type', escapeHtml(projectTypes)],
-            ['Timeline', escapeHtml(result.timeline || '—')],
+            ['Tipo di progetto', escapeHtml(projectTypes)],
+            ['Tempi', escapeHtml(result.timeline || '—')],
           ],
-          'Reply to this email to answer directly.'
+          'Rispondi a questa email per rispondere direttamente.'
         ),
       });
     }
@@ -162,24 +162,24 @@ export default {
       await strapi.plugin('email').service('email').send({
         to: mailTo,
         replyTo: result.email,
-        subject: `New job application: ${result.role} — ${result.name} ${result.surname}`,
+        subject: `Nuova candidatura: ${result.role} — ${result.name} ${result.surname}`,
         text: [
-          `Name: ${result.name} ${result.surname}`,
+          `Nome: ${result.name} ${result.surname}`,
           `Email: ${result.email}`,
-          `Phone: ${result.phone}`,
-          `Role: ${result.role}`,
-          attachments.length > 0 ? 'CV: attached (not kept on the server)' : 'CV: could not be attached — check the admin panel.',
+          `Telefono: ${result.phone}`,
+          `Ruolo: ${result.role}`,
+          attachments.length > 0 ? 'CV: allegato (non conservato sul server)' : 'CV: impossibile allegarlo, controlla il pannello admin.',
         ].join('\n'),
         html: renderEmailHtml(
-          'New job application',
+          'Nuova candidatura',
           [
-            ['Name', escapeHtml(`${result.name} ${result.surname}`)],
+            ['Nome', escapeHtml(`${result.name} ${result.surname}`)],
             ['Email', mailtoLink(result.email)],
-            ['Phone', `<a href="tel:${escapeHtml(result.phone)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(result.phone)}</a>`],
-            ['Role', escapeHtml(result.role)],
-            ['CV', attachments.length > 0 ? 'Attached to this email (not kept on the server)' : 'Could not be attached — check the admin panel'],
+            ['Telefono', `<a href="tel:${escapeHtml(result.phone)}" style="color:#FF5B00;text-decoration:none;">${escapeHtml(result.phone)}</a>`],
+            ['Ruolo', escapeHtml(result.role)],
+            ['CV', attachments.length > 0 ? 'Allegato a questa email (non conservato sul server)' : 'Impossibile allegarlo: controlla il pannello admin'],
           ],
-          'Reply to this email to answer directly.'
+          'Rispondi a questa email per rispondere direttamente.'
         ),
         attachments,
       });
