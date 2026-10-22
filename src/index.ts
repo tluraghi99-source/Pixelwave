@@ -71,15 +71,25 @@ export default {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
 
+    // Public address of the PixelWave logo used in the email header (a PNG:
+    // email clients don't render SVG). The file lives in the website's
+    // public/email folder, so it is served by the site itself.
+    const EMAIL_LOGO_URL =
+      process.env.EMAIL_LOGO_URL || 'https://pixelwave.it/email/logo-pixelwave-white.png';
+
     // Inline-styled table layout — email clients ignore <style> blocks and
     // modern CSS, so this is the one format that renders consistently.
-    // Row values are passed in already-escaped (or as trusted markup).
+    // The black header band runs edge to edge across whatever width the mail
+    // window/phone has (width:100%), with the logo aligned to the same 960px
+    // column as the content card below it, which shrinks on narrow screens
+    // (width:100% + max-width:960px). Row values are passed in already-escaped
+    // (or as trusted markup).
     function renderEmailHtml(title: string, rows: Array<[string, string]>, note?: string) {
       const rowsHtml = rows
         .map(
           ([label, value]) => `
             <tr>
-              <td style="padding:14px 0;border-bottom:1px solid #e5e5e5;width:130px;vertical-align:top;font-family:Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#808080;">${escapeHtml(label)}</td>
+              <td style="padding:14px 0;border-bottom:1px solid #e5e5e5;width:170px;vertical-align:top;font-family:Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#808080;">${escapeHtml(label)}</td>
               <td style="padding:14px 0;border-bottom:1px solid #e5e5e5;vertical-align:top;font-family:Helvetica,Arial,sans-serif;font-size:15px;color:#000000;">${value}</td>
             </tr>`
         )
@@ -87,18 +97,36 @@ export default {
 
       return `<!doctype html>
 <html lang="it">
-  <body style="margin:0;padding:24px;background:#f5f5f5;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body style="margin:0;padding:0;background:#f5f5f5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#000000;border-bottom:4px solid #FF5B00;">
       <tr>
-        <td style="background:#000000;padding:24px 32px;border-bottom:4px solid #FF5B00;">
-          <span style="font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#ffffff;">PixelWave</span>
+        <td align="center" style="padding:28px 24px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:960px;">
+            <tr>
+              <td align="left" style="padding:0 8px;">
+                <img src="${escapeHtml(EMAIL_LOGO_URL)}" alt="PixelWave" width="150" style="display:block;border:0;outline:none;width:150px;max-width:100%;height:auto;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#ffffff;">
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
+    </table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#f5f5f5;">
       <tr>
-        <td style="padding:32px;">
-          <h1 style="margin:0 0 20px;font-family:Helvetica,Arial,sans-serif;font-size:22px;color:#000000;">${escapeHtml(title)}</h1>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rowsHtml}</table>
-          ${note ? `<p style="margin:24px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#666666;">${escapeHtml(note)}</p>` : ''}
+        <td align="center" style="padding:24px 16px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:960px;background:#ffffff;">
+            <tr>
+              <td style="padding:32px;">
+                <h1 style="margin:0 0 20px;font-family:Helvetica,Arial,sans-serif;font-size:22px;color:#000000;">${escapeHtml(title)}</h1>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rowsHtml}</table>
+                ${note ? `<p style="margin:24px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#666666;">${escapeHtml(note)}</p>` : ''}
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
