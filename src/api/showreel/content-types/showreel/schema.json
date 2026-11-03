@@ -1,0 +1,24 @@
+{
+  "kind": "singleType",
+  "collectionName": "showreels",
+  "info": {
+    "singularName": "showreel",
+    "pluralName": "showreels",
+    "displayName": "Showreel",
+    "description": "Il video che si apre a tutto schermo cliccando il quadrato del logo nella home. Se non è pubblicato, il pulsante sul sito non compare."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "youtubeUrl": {
+      "type": "string"
+    }
+  }
+}

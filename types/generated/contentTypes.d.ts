@@ -586,6 +586,36 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiShowreelShowreel extends Struct.SingleTypeSchema {
+  collectionName: 'showreels';
+  info: {
+    description: 'Il video che si apre a tutto schermo cliccando il quadrato del logo nella home. Se non \u00E8 pubblicato, il pulsante sul sito non compare.';
+    displayName: 'Showreel';
+    pluralName: 'showreels';
+    singularName: 'showreel';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::showreel.showreel'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    video: Schema.Attribute.Media<'videos'>;
+    youtubeUrl: Schema.Attribute.String;
+  };
+}
+
 export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
   collectionName: 'team_members';
   info: {
@@ -1166,6 +1196,7 @@ declare module '@strapi/strapi' {
       'api::client-logo.client-logo': ApiClientLogoClientLogo;
       'api::contact-submission.contact-submission': ApiContactSubmissionContactSubmission;
       'api::project.project': ApiProjectProject;
+      'api::showreel.showreel': ApiShowreelShowreel;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'api::work-category.work-category': ApiWorkCategoryWorkCategory;
       'plugin::content-releases.release': PluginContentReleasesRelease;
