@@ -648,6 +648,54 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiVisionFromVisionFrom extends Struct.CollectionTypeSchema {
+  collectionName: 'vision_froms';
+  info: {
+    description: "Un video per ogni luogo: sul sito \u00E8 un punto sul globo (home), con il titolo e sotto il luogo; cliccandolo il video si apre a tutto schermo. Scrivi titolo e luogo (es. 'Parigi, Francia'): le coordinate si compilano da sole al salvataggio. Servono anche un video caricato o un link YouTube. Pubblica per farlo comparire.";
+    displayName: 'Vision from';
+    pluralName: 'vision-froms';
+    singularName: 'vision-from';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    latitude: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 90;
+          min: -90;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vision-from.vision-from'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String & Schema.Attribute.Required;
+    longitude: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 180;
+          min: -180;
+        },
+        number
+      >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    video: Schema.Attribute.Media<'videos'>;
+    youtubeUrl: Schema.Attribute.String;
+  };
+}
+
 export interface ApiWorkCategoryWorkCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'work_categories';
@@ -1198,6 +1246,7 @@ declare module '@strapi/strapi' {
       'api::project.project': ApiProjectProject;
       'api::showreel.showreel': ApiShowreelShowreel;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
+      'api::vision-from.vision-from': ApiVisionFromVisionFrom;
       'api::work-category.work-category': ApiWorkCategoryWorkCategory;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

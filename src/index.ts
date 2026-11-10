@@ -38,6 +38,8 @@ export default {
       'api::work-category.work-category.findOne',
       // single type: only `find` exists (there is no findOne / no id).
       'api::showreel.showreel.find',
+      'api::vision-from.vision-from.find',
+      'api::vision-from.vision-from.findOne',
       // create only (not find/findOne) — the /contact and /careers forms
       // submit directly to these, but nothing about past submissions
       // (someone else's name, email, CV) should ever be publicly readable.

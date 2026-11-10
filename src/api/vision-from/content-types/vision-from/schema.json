@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vision_froms",
+  "info": {
+    "singularName": "vision-from",
+    "pluralName": "vision-froms",
+    "displayName": "Vision from",
+    "description": "Un video per ogni luogo: sul sito è un punto sul globo (home), con il titolo e sotto il luogo; cliccandolo il video si apre a tutto schermo. Scrivi titolo e luogo (es. 'Parigi, Francia'): le coordinate si compilano da sole al salvataggio. Servono anche un video caricato o un link YouTube. Pubblica per farlo comparire."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "location": {
+      "type": "string",
+      "required": true
+    },
+    "latitude": {
+      "type": "decimal",
+      "min": -90,
+      "max": 90
+    },
+    "longitude": {
+      "type": "decimal",
+      "min": -180,
+      "max": 180
+    },
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "youtubeUrl": {
+      "type": "string"
+    }
+  }
+}
